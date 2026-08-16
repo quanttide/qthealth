@@ -1,4 +1,4 @@
-/// 单题快照 Cubit：加载历史 + 记录/修改今日答案。
+/// 单题快照 Cubit：加载历史 + 记录/修改今日各维度答案。
 library;
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,17 +22,17 @@ class SnapshotCubit extends Cubit<SnapshotState> {
     emit(SnapshotState(history: history, today: state.today));
   }
 
-  /// 记录/修改今日答案（同日多次点选以最后一次为准）。
-  Future<void> answer(int value) async {
+  /// 记录/修改今日某维度答案（同日同题多次点选以最后一次为准）。
+  Future<void> answer(String questionId, int value) async {
     final s = state;
     final date = fmtDate(s.today);
     final others = [
       for (final x in s.history)
-        if (x.date != date) x,
+        if (!(x.date == date && x.questionId == questionId)) x,
     ];
     final updated = [
       ...others,
-      DailySnapshot(date: date, questionId: s.question.id, value: value),
+      DailySnapshot(date: date, questionId: questionId, value: value),
     ];
     await _store.save(updated);
     if (isClosed) return;

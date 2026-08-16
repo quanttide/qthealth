@@ -1,10 +1,8 @@
-/// 单题快照：每天只问 1 题（10 秒完成），代替完整量表。
-///
-/// 题集按日期轮换：精力 → 压力 → 睡眠 → 情绪 → 循环。
-/// 选项为按钮点选（数字 1-5 或表情），前端无问卷感。
+/// 单题快照：每天 4 个核心维度各问 1 题（每题 10 秒内完成），
+/// 按钮点选即记录，无问卷感。替代完整量表。
 library;
 
-/// 快照题：一天一问，按日期轮换。
+/// 快照题：一个核心维度。
 class SnapshotQuestion {
   const SnapshotQuestion({
     required this.id,
@@ -25,7 +23,7 @@ class SnapshotQuestion {
   final List<int> values;
 }
 
-/// 单日快照记录。
+/// 单日快照记录（一天同一题一条，修改以最后一次为准）。
 class DailySnapshot {
   const DailySnapshot({
     required this.date,
@@ -51,7 +49,7 @@ class DailySnapshot {
       );
 }
 
-/// 快照题集：4 个核心维度，按日期轮换（每天只问 1 题）。
+/// 快照题集：4 个核心维度，每天全部展示（每题点选即记录）。
 const List<SnapshotQuestion> kSnapshotQuestions = [
   SnapshotQuestion(
     id: 'energy',
@@ -78,12 +76,6 @@ const List<SnapshotQuestion> kSnapshotQuestions = [
     values: [1, 2, 3],
   ),
 ];
-
-/// 按日期取今日题目（自 2026-01-01 起按天数轮换）。
-SnapshotQuestion questionForDate(DateTime date) {
-  final days = date.difference(DateTime(2026, 1, 1)).inDays;
-  return kSnapshotQuestions[days % kSnapshotQuestions.length];
-}
 
 /// 按 id 取题（历史记录展示用）；未知 id 返回 null。
 SnapshotQuestion? questionById(String id) {
