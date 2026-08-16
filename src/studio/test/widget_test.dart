@@ -24,7 +24,7 @@ void main() {
     expect(find.text('PSS-4 压力感知'), findsNothing);
   });
 
-  testWidgets('今日快照：逐题点选先暂存，答完一轮统一保存', (tester) async {
+  testWidgets('今日快照：点选先暂存，答完一轮点「保存」统一写入，保存后清空', (tester) async {
     // 高视口：避免 ListView 懒加载把「最近快照」挤出视口
     tester.view.physicalSize = const Size(800, 1400);
     tester.view.devicePixelRatio = 1.0;
@@ -43,39 +43,47 @@ void main() {
     expect(find.text('昨晚睡得好吗？'), findsOneWidget);
     expect(find.text('今天情绪偏向哪边？'), findsOneWidget);
 
-    // 答前 3 题：只暂存（内存），不写存储
+    // 未答任何题：保存按钮禁用，存储无写入
+    final saveButton = find.byKey(const ValueKey('snapshot-save-button'));
+    expect(
+      tester.widget<FilledButton>(saveButton).onPressed,
+      isNull,
+    );
+    var prefs = await SharedPreferences.getInstance();
+    expect(prefs.getString(SnapshotStore.cacheKey), isNull);
+
+    // 答前 3 题：仍只暂存（存储无写入），保存按钮仍禁用
     await _tapOption(tester, 'energy', '3');
     await _tapOption(tester, 'stress', '2');
     await _tapOption(tester, 'sleep', '4');
     expect(find.textContaining('已选 3 / 4 题'), findsOneWidget);
-    var prefs = await SharedPreferences.getInstance();
+    expect(tester.widget<FilledButton>(saveButton).onPressed, isNull);
+    prefs = await SharedPreferences.getInstance();
     expect(prefs.getString(SnapshotStore.cacheKey), isNull);
 
-    // 第 4 题答完：一轮完成，统一保存一次（存储出现完整 4 条）
+    // 答完第 4 题：保存按钮可用；点保存 → 统一写入 4 条
     await _tapOption(tester, 'mood', '🙂');
-    expect(find.textContaining('已答 4 / 4 题'), findsOneWidget);
+    expect(tester.widget<FilledButton>(saveButton).onPressed, isNotNull);
+    await tester.tap(saveButton);
+    await tester.pumpAndSettle();
     prefs = await SharedPreferences.getInstance();
     final saved = jsonDecode(prefs.getString(SnapshotStore.cacheKey)!) as List;
     expect(saved.length, 4);
-    expect(saved.map((e) => e['questionId']).toSet(),
-        {'energy', 'stress', 'sleep', 'mood'});
-
-    // 全部出现在最近快照（卡内 1 处 + 历史 1 处）
-    expect(find.text('最近快照'), findsOneWidget);
-    expect(find.text('今天精力怎么样？'), findsNWidgets(2));
-    expect(find.text('今天情绪偏向哪边？'), findsNWidgets(2));
-
-    // 修改答案：统一保存一次，不产生重复记录
-    await _tapOption(tester, 'energy', '5');
-    expect(find.textContaining('已答 4 / 4 题'), findsOneWidget);
-    prefs = await SharedPreferences.getInstance();
-    final afterEdit = jsonDecode(prefs.getString(SnapshotStore.cacheKey)!) as List;
-    expect(afterEdit.length, 4);
     expect(
-      (afterEdit.firstWhere((e) => e['questionId'] == 'energy'))['value'],
-      5,
+      saved.map((e) => e['questionId']).toSet(),
+      {'energy', 'stress', 'sleep', 'mood'},
     );
-    expect(find.text('今天精力怎么样？'), findsNWidgets(2));
+
+    // 保存后清空：表单消失，显示完成态
+    expect(find.text('✓ 今日快照已保存'), findsOneWidget);
+    expect(find.text('今天精力怎么样？'), findsOneWidget); // 仅最近快照列表
+    expect(find.byKey(const ValueKey('snapshot-save-button')), findsNothing);
+
+    // 最近快照出现今日 4 条（表单已清空，题目仅出现在历史列表；
+    // 日期共 5 处：卡头 1 + 历史 4）
+    expect(find.text('最近快照'), findsOneWidget);
+    expect(find.text('今天情绪偏向哪边？'), findsOneWidget);
+    expect(find.text('2026-08-17'), findsNWidgets(5));
   });
 
   testWidgets('最近快照展示历史记录（含日期与所选值）', (tester) async {
