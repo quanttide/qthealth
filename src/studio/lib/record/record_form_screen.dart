@@ -44,7 +44,9 @@ class _FormScaffold extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: Text('情绪日记（${state.step + 1}/2）'),
-            leading: BackButton(onPressed: () => context.pop()),
+            // 日志是常驻侧边导航的标签页（go 直达、无路由栈），
+            // 不显示返回箭头（侧边栏即导航）；保存完成页另设返回按钮。
+            automaticallyImplyLeading: false,
           ),
           body: SafeArea(
             child: Column(
@@ -117,7 +119,9 @@ class _JournalView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<RecordFormCubit>();
-    final selected = context.select((RecordFormState s) => s.selectedEmotion);
+    // 注意：select 的类型参数必须是 Provider 提供的 Cubit（BlocProvider 提供
+    // 的是 Cubit 而非 State，写 RecordFormState 会 ProviderNotFoundException）
+    final selected = context.select((RecordFormCubit c) => c.state.selectedEmotion);
     final theme = Theme.of(context);
 
     return ListView(
@@ -171,7 +175,8 @@ class _ProcessedView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<RecordFormCubit>();
-    final s = context.select((RecordFormState state) => state);
+    // select 的 T 必须是 Cubit（见 _JournalView 注释）
+    final s = context.select((RecordFormCubit c) => c.state);
     final theme = Theme.of(context);
 
     return ListView(
@@ -469,7 +474,7 @@ class _CompletedView extends StatelessWidget {
                 ),
               const SizedBox(height: 24),
               FilledButton(
-                onPressed: () => context.go('/'),
+                onPressed: () => context.go('/status'),
                 child: const Text('返回首页'),
               ),
             ],

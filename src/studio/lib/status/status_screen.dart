@@ -47,7 +47,8 @@ class StatusScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push('/record'),
+        // 与侧边导航一致的标签页跳转（go），避免 push 造成路由栈不一致
+        onPressed: () => context.go('/record'),
         icon: const Icon(Icons.edit_note),
         label: const Text('写日记'),
       ),

@@ -10,7 +10,13 @@
 
 ## [Unreleased]
 
-（待发布内容将在此累积）
+### Fixed
+
+- 日志页打开即崩溃（ProviderNotFoundException）：`context.select` 误用 `RecordFormState` 作为类型参数（BlocProvider 提供的是 Cubit）→ 改为 `RecordFormCubit`
+- 日志页 AppBar 死返回箭头（标签页无路由栈）→ 移除，以常驻侧边导航为准
+- 保存完成页「返回首页」`go('/')` 无对应路由 → 改为 `go('/status')`
+- 危机干预页按钮 `go('/')` 失效 → 「继续记录」返回触发页（无来源回状态页）、「联系专业帮助」弹热线对话框
+- 状态页写日记 FAB 由 push 改为 go（与侧边导航标签页行为一致）
 
 ---
 

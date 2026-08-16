@@ -11,6 +11,35 @@ class CrisisScreen extends StatelessWidget {
 
   final String message;
 
+  /// 热线弹窗（Web 端无拨号能力，集中展示热线供拨打）。
+  Future<void> _showHotlines(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('联系专业帮助'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('请拨打以下热线，或前往就近医疗机构：'),
+            const SizedBox(height: 12),
+            for (final hotline in kHotlines)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Text('📞 $hotline'),
+              ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('我知道了'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -78,8 +107,15 @@ class CrisisScreen extends StatelessWidget {
                         foregroundColor: Colors.white,
                         side: const BorderSide(color: Colors.white70),
                       ),
-                      onPressed: () => context.go('/'),
-                      child: const Text('返回首页'),
+                      // 返回触发页（日志输入保留）；无来源时回状态页
+                      onPressed: () {
+                        if (context.canPop()) {
+                          context.pop();
+                        } else {
+                          context.go('/status');
+                        }
+                      },
+                      child: const Text('继续记录'),
                     ),
                     const SizedBox(width: 16),
                     FilledButton(
@@ -87,7 +123,7 @@ class CrisisScreen extends StatelessWidget {
                         backgroundColor: Colors.white,
                         foregroundColor: const Color(0xFF7B1E1E),
                       ),
-                      onPressed: () => context.go('/'),
+                      onPressed: () => _showHotlines(context),
                       child: const Text('联系专业帮助'),
                     ),
                   ],

@@ -18,3 +18,6 @@ void main() {
     expect(find.byTooltip('心理测试'), findsOneWidget);
   });
 }
+
+// 追加用例：日志页保存完成后的导航（回归：此前「返回首页」go('/') 无路由）
+// ignore_for_file: prefer_const_constructors
