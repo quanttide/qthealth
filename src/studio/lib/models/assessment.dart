@@ -82,7 +82,7 @@ class Assessment {
     this.dimensionBands = const [],
   });
 
-  final String id; // phq9 / gad7 / pss4 / mini-ipip / cbi
+  final String id; // pss4 / mini-ipip / cbi（PHQ-9/GAD-7 因版权已下线）
   final String title;
   final String description;
   final String instruction;

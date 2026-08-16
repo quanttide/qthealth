@@ -161,17 +161,6 @@ class AssessmentQuizState extends AssessmentState {
     List<DimensionScore> dimensions,
   ) {
     switch (a.id) {
-      case 'phq9':
-        if (total <= 4) return '您的得分处于正常范围，请继续保持良好的生活习惯与情绪觉察。';
-        if (total <= 9) return '您存在轻度抑郁症状，建议关注情绪变化，尝试情绪日记与规律作息。';
-        if (total <= 14) return '您存在中度抑郁症状，建议尽快咨询专业心理医生，并结合 CBT 工具自我调节。';
-        if (total <= 19) return '您存在中重度抑郁症状，强烈建议尽快就医，接受专业评估与治疗。';
-        return '您存在重度抑郁症状，请立即联系专业医疗机构或拨打求助热线。';
-      case 'gad7':
-        if (total <= 4) return '您的得分处于正常范围，请继续保持良好的生活习惯与情绪觉察。';
-        if (total <= 9) return '您存在轻度焦虑症状，建议尝试深呼吸练习与情绪日记，关注压力来源。';
-        if (total <= 14) return '您存在中度焦虑症状，建议尽快咨询专业心理医生，并结合 CBT 工具自我调节。';
-        return '您存在重度焦虑症状，请立即联系专业医疗机构或拨打求助热线。';
       case 'pss4':
         if (total <= 4) return '过去一个月您的压力感知偏低。若配合 Mini-IPIP 情绪稳定性得分，可进一步判断压力倾向。';
         if (total <= 8) return '过去一个月您的压力感知中等。建议关注压力来源，尝试情绪日记记录触发事件。';
