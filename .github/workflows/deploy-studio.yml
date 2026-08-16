@@ -74,6 +74,7 @@ jobs:
             -target=alicloud_cdn_domain_new.studio_web \
             -target=alicloud_cdn_domain_config.studio_web_private_back \
             -target=alicloud_cdn_domain_config.studio_web_root_rewrite \
+            -target=alicloud_cdn_domain_config.studio_web_spa_fallback \
             -target=alicloud_cdn_domain_config.studio_web_https_force \
             -target=alicloud_alidns_record.studio_web
         env:

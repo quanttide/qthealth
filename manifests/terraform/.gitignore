@@ -1,0 +1,4 @@
+# Terraform 本地目录与状态文件（远程状态在 OSS，本地不入库）
+.terraform/
+*.tfstate
+*.tfstate.*

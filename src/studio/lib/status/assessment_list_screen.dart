@@ -41,8 +41,6 @@ class _ListBody extends StatelessWidget {
                     leading: CircleAvatar(
                       child: Icon(
                         switch (assessment.id) {
-                          'phq9' => Icons.cloud_outlined,
-                          'gad7' => Icons.waves,
                           'pss4' => Icons.speed,
                           'mini-ipip' => Icons.hub_outlined,
                           _ => Icons.local_fire_department_outlined,

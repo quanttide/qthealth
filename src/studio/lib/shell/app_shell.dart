@@ -1,7 +1,8 @@
 /// 应用外壳：常驻侧边导航（NavigationRail）+ 内容区。
 ///
-/// 导航：记录（观测）/ 状态（反馈）/ 练习（干预）。
-/// 量表作为记录的一种类型，从「记录」页进入，不单独设导航入口。
+/// 导航：记录（观测）。量表作为记录的一种类型，从「记录」页进入，
+/// 不单独设导航入口。已下线：状态（反馈）/ 练习（干预）——组件代码
+/// 保留在 lib/status/、lib/practice/，未来可重新注册路由与导航入口。
 library;
 
 import 'package:flutter/material.dart';
@@ -24,18 +25,6 @@ class AppShell extends StatelessWidget {
       selectedIcon: Icons.edit_note,
       label: '记录',
       path: '/record',
-    ),
-    (
-      icon: Icons.insights_outlined,
-      selectedIcon: Icons.insights,
-      label: '状态',
-      path: '/status',
-    ),
-    (
-      icon: Icons.self_improvement_outlined,
-      selectedIcon: Icons.self_improvement,
-      label: '练习',
-      path: '/practice',
     ),
   ];
 

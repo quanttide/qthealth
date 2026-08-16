@@ -10,40 +10,6 @@ AssessmentResult score(Assessment a, Map<int, int> answers) {
 }
 
 void main() {
-  group('PHQ-9', () {
-    test('量表结构：9 题、每题 4 档、末题为危机项', () {
-      expect(kPhq9.questions.length, 9);
-      expect(kPhq9.questions.last.isCrisisItem, isTrue);
-      expect(kPhq9.questions.first.options.length, 4);
-      expect(kPhq9.maxScore, 27);
-    });
-
-    test('分级边界：0-4 / 5-9 / 10-14 / 15-19 / 20-27', () {
-      expect(levelNameFor(kPhq9, 0), '无明显抑郁症状');
-      expect(levelNameFor(kPhq9, 4), '无明显抑郁症状');
-      expect(levelNameFor(kPhq9, 5), '轻度抑郁症状');
-      expect(levelNameFor(kPhq9, 9), '轻度抑郁症状');
-      expect(levelNameFor(kPhq9, 14), '中度抑郁症状');
-      expect(levelNameFor(kPhq9, 19), '中重度抑郁症状');
-      expect(levelNameFor(kPhq9, 27), '重度抑郁症状');
-    });
-  });
-
-  group('GAD-7', () {
-    test('量表结构：7 题、无危机项', () {
-      expect(kGad7.questions.length, 7);
-      expect(kGad7.questions.any((q) => q.isCrisisItem), isFalse);
-      expect(kGad7.maxScore, 21);
-    });
-
-    test('分级边界：0-4 / 5-9 / 10-14 / 15-21', () {
-      expect(levelNameFor(kGad7, 4), '无明显焦虑症状');
-      expect(levelNameFor(kGad7, 9), '轻度焦虑症状');
-      expect(levelNameFor(kGad7, 14), '中度焦虑症状');
-      expect(levelNameFor(kGad7, 21), '重度焦虑症状');
-    });
-  });
-
   group('PSS-4（profile：pss-4.md）', () {
     test('量表结构：4 题、5 档、满分 16', () {
       expect(kPss4.questions.length, 4);
@@ -160,16 +126,16 @@ void main() {
   group('AssessmentResult 序列化', () {
     test('toJson/fromJson 往返一致', () {
       final result = AssessmentResult(
-        assessment: kPhq9,
-        total: 12,
-        level: '中度抑郁症状',
-        interpretation: '建议咨询',
+        assessment: kPss4,
+        total: 8,
+        level: '压力感知中等',
+        interpretation: '建议放松练习',
         crisisFlagged: false,
         takenAt: DateTime(2026, 8, 16),
       );
-      final restored = AssessmentResult.fromJson(result.toJson(), kPhq9);
-      expect(restored.total, 12);
-      expect(restored.level, '中度抑郁症状');
+      final restored = AssessmentResult.fromJson(result.toJson(), kPss4);
+      expect(restored.total, 8);
+      expect(restored.level, '压力感知中等');
       expect(restored.takenAt.year, 2026);
     });
 

@@ -1,129 +1,16 @@
 /// 内置量表定义。
 ///
-/// - PHQ-9（抑郁筛查）、GAD-7（焦虑筛查）：公开标准量表，结果仅供参考
-/// - PSS-4、Mini-IPIP、CBI：数据来自 `data/profile`（公共领域，无版权争议）
-///   — profile 档案：`data/profile/scales/{pss-4,mini-ipip,cbi}.md`
+/// 仅保留无版权争议的公共领域量表，数据来自 `data/profile`：
+/// - PSS-4、Mini-IPIP、CBI：`data/profile/scales/{pss-4,mini-ipip,cbi}.md`
+/// - PHQ-9 / GAD-7 因版权原因已下线（PHQ-9 版权归 Pfizer 所有）
 /// - 页面展示免责声明；不构成医学诊断
 library;
 
 import '../models/assessment.dart';
 
-const List<AssessmentOption> kFrequencyOptions = [
-  AssessmentOption(score: 0, label: '完全没有'),
-  AssessmentOption(score: 1, label: '有几天'),
-  AssessmentOption(score: 2, label: '一半以上天数'),
-  AssessmentOption(score: 3, label: '几乎每天'),
-];
-
 const String kDisclaimer =
     '本测试结果仅供参考，不构成医学诊断。如有困扰，请及时联系专业心理机构或医生；'
     '若出现伤害自己或他人的念头，请立即拨打求助热线。';
-
-/// 过去的 2 周里，您有多经常被以下问题困扰？
-const Assessment kPhq9 = Assessment(
-  id: 'phq9',
-  title: 'PHQ-9 抑郁筛查',
-  description: '评估过去两周的抑郁症状严重程度（9 题，约 2 分钟）',
-  instruction: '过去的 2 周里，您有多经常被以下问题困扰？',
-  disclaimer: kDisclaimer,
-  bands: kPhq9Bands,
-  questions: [
-    AssessmentQuestion(
-      text: '做事时提不起劲或没有兴趣',
-      options: kFrequencyOptions,
-    ),
-    AssessmentQuestion(
-      text: '感到心情低落、沮丧或绝望',
-      options: kFrequencyOptions,
-    ),
-    AssessmentQuestion(
-      text: '入睡困难、睡不安稳或睡眠过多',
-      options: kFrequencyOptions,
-    ),
-    AssessmentQuestion(
-      text: '感觉疲倦或没有活力',
-      options: kFrequencyOptions,
-    ),
-    AssessmentQuestion(
-      text: '食欲不振或吃太多',
-      options: kFrequencyOptions,
-    ),
-    AssessmentQuestion(
-      text: '觉得自己很糟，或觉得自己很失败，或让自己或家人失望',
-      options: kFrequencyOptions,
-    ),
-    AssessmentQuestion(
-      text: '对事物专注有困难，例如看报纸或看电视时',
-      options: kFrequencyOptions,
-    ),
-    AssessmentQuestion(
-      text: '行动或说话速度缓慢到别人已经察觉？或正好相反——变得比平日更烦躁或坐立不安',
-      options: kFrequencyOptions,
-    ),
-    AssessmentQuestion(
-      text: '有不如死掉或用某种方式伤害自己的念头',
-      options: kFrequencyOptions,
-      isCrisisItem: true,
-    ),
-  ],
-);
-
-/// PHQ-9 分级：0-4 无/轻微，5-9 轻度，10-14 中度，15-19 中重度，20-27 重度。
-const List<LevelBand> kPhq9Bands = [
-  LevelBand(min: 0, max: 4, name: '无明显抑郁症状'),
-  LevelBand(min: 5, max: 9, name: '轻度抑郁症状'),
-  LevelBand(min: 10, max: 14, name: '中度抑郁症状'),
-  LevelBand(min: 15, max: 19, name: '中重度抑郁症状'),
-  LevelBand(min: 20, max: 27, name: '重度抑郁症状'),
-];
-
-/// 过去的 2 周里，您有多经常被以下问题困扰？
-const Assessment kGad7 = Assessment(
-  id: 'gad7',
-  title: 'GAD-7 焦虑筛查',
-  description: '评估过去两周的广泛性焦虑症状严重程度（7 题，约 1 分钟）',
-  instruction: '过去的 2 周里，您有多经常被以下问题困扰？',
-  disclaimer: kDisclaimer,
-  bands: kGad7Bands,
-  questions: [
-    AssessmentQuestion(
-      text: '感觉紧张、焦虑或急切',
-      options: kFrequencyOptions,
-    ),
-    AssessmentQuestion(
-      text: '不能够停止或控制担忧',
-      options: kFrequencyOptions,
-    ),
-    AssessmentQuestion(
-      text: '对各种各样的事情担忧过多',
-      options: kFrequencyOptions,
-    ),
-    AssessmentQuestion(
-      text: '很难放松下来',
-      options: kFrequencyOptions,
-    ),
-    AssessmentQuestion(
-      text: '由于不安而无法静坐',
-      options: kFrequencyOptions,
-    ),
-    AssessmentQuestion(
-      text: '变得容易烦恼或急躁',
-      options: kFrequencyOptions,
-    ),
-    AssessmentQuestion(
-      text: '感到似乎将有可怕的事情发生而害怕',
-      options: kFrequencyOptions,
-    ),
-  ],
-);
-
-/// GAD-7 分级：0-4 无/轻微，5-9 轻度，10-14 中度，15-21 重度。
-const List<LevelBand> kGad7Bands = [
-  LevelBand(min: 0, max: 4, name: '无明显焦虑症状'),
-  LevelBand(min: 5, max: 9, name: '轻度焦虑症状'),
-  LevelBand(min: 10, max: 14, name: '中度焦虑症状'),
-  LevelBand(min: 15, max: 21, name: '重度焦虑症状'),
-];
 
 // ── PSS-4 感知压力（简版）：data/profile/scales/pss-4.md ────────────────
 // 公共领域（Cohen 等公开提供，注明引用即可）。第 2、3 题反向计分。
@@ -467,10 +354,8 @@ const Assessment kCbi = Assessment(
   ],
 );
 
-/// 全部内置量表（PHQ-9 / GAD-7 / PSS-4 / Mini-IPIP / CBI）。
+/// 全部内置量表（PSS-4 / Mini-IPIP / CBI，均无版权争议）。
 const List<Assessment> kAssessments = [
-  kPhq9,
-  kGad7,
   kPss4,
   kMiniIpip,
   kCbi,

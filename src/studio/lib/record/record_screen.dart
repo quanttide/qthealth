@@ -1,7 +1,8 @@
 /// 记录页：记录类型入口。
 ///
-/// 量表是记录的一种类型（测评记录），与情绪日记并列从本页进入，
-/// 不单独设导航入口。预留：病程跟踪 / 用药记录 / 就诊记录
+/// 量表是记录的一种类型（测评记录），从本页进入，不单独设导航入口。
+/// 情绪日记已下线（组件代码保留在 lib/record/record_form_screen.dart，
+/// 未来可恢复为卡片入口）。预留：病程跟踪 / 用药记录 / 就诊记录
 /// （家庭大病管理场景，见 kRecordCategories）。
 library;
 
@@ -22,15 +23,9 @@ class RecordScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         children: [
           _RecordTypeCard(
-            icon: Icons.edit_note,
-            title: '情绪日记',
-            subtitle: '自由书写，自动梳理情绪、想法与行动建议（ABC 记录）',
-            onTap: () => context.push('/record/journal'),
-          ),
-          _RecordTypeCard(
             icon: Icons.psychology_outlined,
             title: '量表',
-            subtitle: 'PHQ-9 / GAD-7 / PSS-4 / Mini-IPIP / CBI 专业测评',
+            subtitle: 'PSS-4 / Mini-IPIP / CBI 专业测评（公共领域量表）',
             onTap: () => context.push('/assessments'),
           ),
           const SizedBox(height: 8),

@@ -177,6 +177,27 @@ resource "alicloud_cdn_domain_config" "studio_web_root_rewrite" {
   }
 }
 
+# SPA 回退改写：Flutter Web 采用 Path URL 策略（无 #），直接访问/刷新
+# 子路由（如 /record、/assessments）时回源 OSS 会 404，统一改写为
+# /index.html；真实产物（入口/引导/JS/清单/图标及 assets、icons、
+# canvaskit 目录）保持原样回源。
+resource "alicloud_cdn_domain_config" "studio_web_spa_fallback" {
+  domain_name   = alicloud_cdn_domain_new.studio_web.domain_name
+  function_name = "back_to_origin_url_rewrite"
+  function_args {
+    arg_name  = "source_url"
+    arg_value = "^/(?!index\\.html$|main\\.dart\\.js$|flutter\\.js$|flutter_bootstrap\\.js$|flutter_service_worker\\.js$|manifest\\.json$|version\\.json$|favicon\\.png$|assets/|icons/|canvaskit/).*"
+  }
+  function_args {
+    arg_name  = "target_url"
+    arg_value = "/index.html"
+  }
+  function_args {
+    arg_name  = "flag"
+    arg_value = "break"
+  }
+}
+
 # 强制 HTTPS
 resource "alicloud_cdn_domain_config" "studio_web_https_force" {
   domain_name   = alicloud_cdn_domain_new.studio_web.domain_name
