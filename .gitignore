@@ -1,2 +1,4 @@
+/src/cli/target/
+/src/provider/server
 /src/site/node_modules/
 /src/site/dist/
