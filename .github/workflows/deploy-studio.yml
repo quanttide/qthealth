@@ -96,15 +96,17 @@ jobs:
           access-key-secret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
 
       # 缓存策略分离（Flutter Web 部署要点）：
-      # - 入口文件（index.html / bootstrap / service worker / manifest）必须 no-cache，
+      # - 入口与引导文件（index.html / bootstrap / service worker / manifest）必须 no-cache，
       #   否则浏览器与 SW 缓存旧入口，发布后用户永远看到旧版本
-      # - 其余产物（main.dart.js / assets 哈希文件）可长缓存
+      # - main.dart.js 是固定文件名（不带内容哈希），也必须 no-cache：
+      #   内容随每次构建变化而文件名不变，长缓存会让浏览器/CDN 命中旧 JS
+      # - 仅 assets/ 下带内容哈希的文件可长缓存（文件名随内容变化）
       - name: Upload to OSS（产物长缓存）
         run: ossutil cp src/studio/build/web/ oss://${{ env.OSS_BUCKET }}/ -r -f --meta=Cache-Control:public,max-age=31536000
 
-      - name: Upload to OSS（入口文件 no-cache）
+      - name: Upload to OSS（入口/引导文件 no-cache）
         run: |
-          for f in index.html flutter_bootstrap.js flutter_service_worker.js manifest.json favicon.png; do
+          for f in index.html flutter_bootstrap.js flutter_service_worker.js manifest.json favicon.png main.dart.js; do
             ossutil cp "src/studio/build/web/$f" "oss://${{ env.OSS_BUCKET }}/$f" -f --meta=Cache-Control:no-cache
           done
 
