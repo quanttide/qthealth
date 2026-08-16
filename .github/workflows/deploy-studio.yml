@@ -3,7 +3,7 @@
 #
 # 架构（对齐 qtcloud-delib 部署模式）：
 #   studio/* tag → Actions（flutter build web + ossutil cp）→ OSS 桶（静态网站模式）
-#   → 阿里云 CDN（health.cloud.quanttide.com，泛域名证书 *.quanttide.com）→ 用户浏览器
+#   → 阿里云 CDN（health.quanttide.com，泛域名证书 *.quanttide.com）→ 用户浏览器
 #
 # 触发说明：用 tag 精确匹配 studio/ 前缀，避免其他组件（provider）的 Release 误触发
 # （与 deploy-provider.yml 的 push tags: provider/** 模式一致）。
@@ -19,7 +19,7 @@
 # 基础设施（manifests/terraform，已 IaC 化并全部落地）：
 #   - OSS 桶 qthealth-studio：静态网站托管 + 私有 ACL（studio-bucket.tf）
 #   - CDN 域名 + 私有回源（l2_oss_key/oss_auth）+ 根路径改写 + RAM 角色 + DNS（cdn.tf）
-#     已验证：http://health.cloud.quanttide.com 200（Flutter Web 应用）
+#     已验证：http://health.quanttide.com 200（Flutter Web 应用）
 #   - 可选：HTTPS 证书（复用泛域名证书 *.quanttide.com，
 #     cdn.tf certificate_config 填证书 ID 后由 terraform 管理）
 
@@ -37,7 +37,7 @@ concurrency:
 env:
   OSS_BUCKET: qthealth-studio
   OSS_ENDPOINT: oss-cn-hangzhou.aliyuncs.com
-  CDN_DOMAIN: health.cloud.quanttide.com
+  CDN_DOMAIN: health.quanttide.com
   PROVIDER_BASE_URL: ${{ vars.PROVIDER_BASE_URL || 'https://qtcloudret-prod-lsqtuthybh.cn-hangzhou.fcapp.run' }}
   AUTH_BASE_URL: ${{ vars.AUTH_BASE_URL || 'https://qtclouduth-prod-gnuguyxinh.cn-hangzhou.fcapp.run' }}
 

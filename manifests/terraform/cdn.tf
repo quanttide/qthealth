@@ -1,5 +1,5 @@
 # =============================================================================
-# Studio CDN + DNS（health.cloud.quanttide.com）
+# Studio CDN + DNS（health.quanttide.com）
 #
 # 链路：OSS 静态网站桶（studio-bucket.tf，私有）→ CDN 加速 + 私有回源鉴权
 #   → CNAME 接入（云解析）→ 用户浏览器
@@ -18,7 +18,7 @@
 # =============================================================================
 
 resource "alicloud_cdn_domain_new" "studio" {
-  domain_name = "health.cloud.quanttide.com"
+  domain_name = "health.quanttide.com"
   cdn_type    = "web"
 
   # 源站：OSS 静态网站桶（私有回源鉴权见上方说明）
@@ -30,9 +30,9 @@ resource "alicloud_cdn_domain_new" "studio" {
   }
 
   # HTTPS 证书：由 acme.sh 管理（Let's Encrypt 单域名证书
-  # health.cloud.quanttide.com，90 天自动续期；续期后 reloadcmd 自动重配 CDN），
+  # health.quanttide.com，90 天自动续期；续期后 reloadcmd 自动重配 CDN），
   # terraform 不管理证书内容（避免私钥入库）——注意 *.quanttide.com 泛域名
-  # 证书不匹配两层子域 health.cloud.quanttide.com，须用单域名证书。
+  # 证书不匹配两层子域 health.quanttide.com，须用单域名证书。
   # certificate_config {
   #   cert_type              = "upload"
   #   server_certificate     = "<PEM 公钥，acme.sh 签发>"

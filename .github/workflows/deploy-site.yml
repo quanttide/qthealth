@@ -1,7 +1,7 @@
 # 部署 site：推送 site/* tag 时，构建 React Web 产物上传到 OSS 静态网站桶，刷新 CDN。
 #
 # 架构：site/* tag → Actions（npm build + ossutil cp）→ OSS 桶（静态网站模式）
-#   → 阿里云 CDN（health.cloud.quanttide.com，泛域名证书 *.quanttide.com）
+#   → 阿里云 CDN（health.quanttide.com，泛域名证书 *.quanttide.com）
 #
 # 所需 GitHub secrets（org 级）：
 #   - ALIYUN_ACCESS_KEY_ID / ALIYUN_ACCESS_KEY_SECRET：RAM 用户 AccessKey（OSS 上传 + CDN 刷新）
@@ -20,7 +20,7 @@ concurrency:
 env:
   OSS_BUCKET: qthealth-site
   OSS_ENDPOINT: oss-cn-hangzhou.aliyuncs.com
-  CDN_DOMAIN: health.cloud.quanttide.com
+  CDN_DOMAIN: health.quanttide.com
 
 jobs:
   build-and-deploy:
@@ -31,6 +31,20 @@ jobs:
         with:
           node-version: 22
 
+      - name: Apply infrastructure (Terraform)
+        working-directory: manifests/terraform
+        run: |
+          terraform init \
+            -backend-config="bucket=${{ secrets.TF_STATE_BUCKET || 'quanttide-terraform-state' }}" \
+            -backend-config="key=qthealth/site.tfstate" \
+            -backend-config="region=cn-hangzhou"
+          terraform apply -auto-approve \
+            -var region=cn-hangzhou \
+            -var environment=prod \
+            -var oss_bucket_name=qthealth-site
+        env:
+          ALICLOUD_ACCESS_KEY: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+          ALICLOUD_SECRET_KEY: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
       - name: Build site
         working-directory: src/site
         run: |

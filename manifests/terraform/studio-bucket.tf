@@ -1,9 +1,9 @@
 # =============================================================================
-# Studio Web 静态站点桶（health.cloud.quanttide.com）
+# Studio Web 静态站点桶（health.quanttide.com）
 #
 # 部署链路（.github/workflows/deploy-studio.yml）：
 #   studio/* tag → Actions（flutter build web + ossutil cp）→ 本桶（静态网站模式）
-#   → 阿里云 CDN（health.cloud.quanttide.com，泛域名证书 *.quanttide.com）→ 用户浏览器
+#   → 阿里云 CDN（health.quanttide.com，泛域名证书 *.quanttide.com）→ 用户浏览器
 #
 # 注意：
 #   - 桶保持私有（RAM 用户无权限设公共读 ACL，阿里云禁止 RAM 用户开放公共读）；
