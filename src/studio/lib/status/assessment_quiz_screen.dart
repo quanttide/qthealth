@@ -1,4 +1,4 @@
-/// 心理测试答题页：逐题作答 + 结果视图（对应危机项勾选即触发危机干预）。
+/// 心理测试答题页：逐题作答（点击答案自动跳转下一题）+ 结果视图。
 library;
 
 import 'package:flutter/material.dart';
@@ -51,6 +51,15 @@ class _QuizBody extends StatelessWidget {
   }
 }
 
+/// 从作答页返回：push 进入则 pop 回记录页，深链直达则回 /record。
+void _backToRecord(BuildContext context) {
+  if (context.canPop()) {
+    context.pop();
+  } else {
+    context.go('/record');
+  }
+}
+
 class _QuizView extends StatelessWidget {
   const _QuizView({required this.quiz});
 
@@ -63,12 +72,11 @@ class _QuizView extends StatelessWidget {
     final question = assessment.questions[quiz.currentIndex];
     final selected = quiz.answers[quiz.currentIndex];
     final isLast = quiz.currentIndex == assessment.questions.length - 1;
-    final answeredAll = quiz.answers.length == assessment.questions.length;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(assessment.title),
-        leading: BackButton(onPressed: () => context.go('/assessments')),
+        leading: BackButton(onPressed: () => _backToRecord(context)),
       ),
       body: SafeArea(
         child: Column(
@@ -110,11 +118,12 @@ class _QuizView extends StatelessWidget {
                     groupValue: selected,
                     onChanged: (value) {
                       if (value == null) return;
+                      // 点击答案即记录并自动跳转下一题；最后一题自动出结果
                       cubit.answer(value);
-                      if (question.isCrisisItem && value > 0) {
-                        // 危机项（自杀意念）勾选即跳转危机干预页
-                        context.push('/crisis',
-                            extra: '${assessment.title} 危机项被标记');
+                      if (isLast) {
+                        cubit.finish();
+                      } else {
+                        cubit.next();
                       }
                     },
                     child: Column(
@@ -151,18 +160,13 @@ class _QuizView extends StatelessWidget {
                     OutlinedButton(
                       onPressed: cubit.previous,
                       child: const Text('上一题'),
-                    ),
-                  const Spacer(),
-                  if (!isLast)
-                    FilledButton(
-                      onPressed: quiz.canNext ? cubit.next : null,
-                      child: const Text('下一题'),
                     )
                   else
-                    FilledButton(
-                      onPressed: answeredAll ? cubit.finish : null,
-                      child: const Text('查看结果'),
+                    Text(
+                      '选择答案后自动进入下一题',
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
+                  const Spacer(),
                 ],
               ),
             ),
@@ -188,7 +192,7 @@ class _ResultView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('${result.assessment.title} · 结果'),
-        leading: BackButton(onPressed: () => context.go('/assessments')),
+        leading: BackButton(onPressed: () => _backToRecord(context)),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -263,16 +267,18 @@ class _ResultView extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           FilledButton(
-            onPressed: () => context.go('/assessments'),
-            child: const Text('返回测试列表'),
+            onPressed: () => context.go('/record'),
+            child: const Text('返回记录页'),
           ),
           const SizedBox(height: 8),
           OutlinedButton(
-            onPressed: () => context.go('/record'),
-            child: const Text('去写一篇情绪日记'),
+            onPressed: () =>
+                context.read<AssessmentCubit>().start(result.assessment),
+            child: const Text('重新作答'),
           ),
         ],
       ),
     );
   }
 }
+

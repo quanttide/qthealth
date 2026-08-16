@@ -1,15 +1,16 @@
 /// 记录页：记录类型入口。
 ///
-/// 量表是记录的一种类型（测评记录），从本页进入，不单独设导航入口。
-/// 情绪日记已下线（组件代码保留在 lib/record/record_form_screen.dart，
-/// 未来可恢复为卡片入口）。预留：病程跟踪 / 用药记录 / 就诊记录
-/// （家庭大病管理场景，见 kRecordCategories）。
+/// 直接列出各具体量表（PSS-4 / Mini-IPIP / CBI，均无版权争议的公共领域
+/// 量表），点击即进入作答（量表列表页已移除）。预留：病程跟踪 / 用药记录 /
+/// 就诊记录（家庭大病管理场景，见 kRecordCategories）。
 library;
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../constants.dart';
+import '../data/assessments.dart';
+import '../models/assessment.dart';
 
 class RecordScreen extends StatelessWidget {
   const RecordScreen({super.key});
@@ -22,12 +23,8 @@ class RecordScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _RecordTypeCard(
-            icon: Icons.psychology_outlined,
-            title: '量表',
-            subtitle: 'PSS-4 / Mini-IPIP / CBI 专业测评（公共领域量表）',
-            onTap: () => context.push('/assessments'),
-          ),
+          for (final assessment in kAssessments)
+            _AssessmentCard(assessment: assessment),
           const SizedBox(height: 8),
           Text(
             '更多记录类型规划中：${kRecordCategories.skip(1).join('、')}（家庭大病管理场景）',
@@ -40,18 +37,11 @@ class RecordScreen extends StatelessWidget {
   }
 }
 
-class _RecordTypeCard extends StatelessWidget {
-  const _RecordTypeCard({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.onTap,
-  });
+/// 具体量表卡片：点击直接进入作答（/assessments/:id）。
+class _AssessmentCard extends StatelessWidget {
+  const _AssessmentCard({required this.assessment});
 
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final VoidCallback onTap;
+  final Assessment assessment;
 
   @override
   Widget build(BuildContext context) {
@@ -59,11 +49,19 @@ class _RecordTypeCard extends StatelessWidget {
     return Card(
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        leading: Icon(icon, color: theme.colorScheme.primary, size: 32),
-        title: Text(title, style: theme.textTheme.titleMedium),
-        subtitle: Text(subtitle),
+        leading: CircleAvatar(
+          child: Icon(
+            switch (assessment.id) {
+              'pss4' => Icons.speed,
+              'mini-ipip' => Icons.hub_outlined,
+              _ => Icons.local_fire_department_outlined,
+            },
+          ),
+        ),
+        title: Text(assessment.title, style: theme.textTheme.titleMedium),
+        subtitle: Text(assessment.description),
         trailing: const Icon(Icons.chevron_right),
-        onTap: onTap,
+        onTap: () => context.push('/assessments/${assessment.id}'),
       ),
     );
   }
