@@ -21,9 +21,9 @@ resource "alicloud_cdn_domain_new" "studio" {
   domain_name = "health.quanttide.com"
   cdn_type    = "web"
 
-  # 源站：OSS 静态网站桶（私有回源鉴权见上方说明）
+  # 源站：OSS 静态网站桶（site 专用桶 qthealth-site——上传目标一致）
   sources {
-    content  = "qthealth-studio.oss-cn-hangzhou.aliyuncs.com"
+    content  = "qthealth-site.oss-cn-hangzhou.aliyuncs.com"
     type     = "oss"
     port     = 80
     priority = 20
