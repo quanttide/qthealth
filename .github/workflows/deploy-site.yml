@@ -1,10 +1,10 @@
-# 部署 site：推送 site/* tag 时，构建 React Web 产物上传到 OSS 静态网站桶，刷新 CDN。
+# 部署 site：推送 site/* tag 时，应用基础设施（Terraform），构建 React Web 产物上传 OSS，刷新 CDN。
 #
-# 架构：site/* tag → Actions（npm build + ossutil cp）→ OSS 桶（静态网站模式）
-#   → 阿里云 CDN（health.quanttide.com，泛域名证书 *.quanttide.com）
+# 架构：site/* tag → Actions（terraform apply + npm build + ossutil cp）
+#   → OSS 桶（qthealth-site 静态网站模式）→ 阿里云 CDN（health.quanttide.com，泛域名证书 *.quanttide.com）
 #
 # 所需 GitHub secrets（org 级）：
-#   - ALIYUN_ACCESS_KEY_ID / ALIYUN_ACCESS_KEY_SECRET：RAM 用户 AccessKey（OSS 上传 + CDN 刷新）
+#   - ALIYUN_ACCESS_KEY_ID / ALIYUN_ACCESS_KEY_SECRET：RAM 用户 AccessKey（terraform + OSS 上传 + CDN 刷新）
 
 name: Deploy Site
 
@@ -45,6 +45,7 @@ jobs:
         env:
           ALICLOUD_ACCESS_KEY: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
           ALICLOUD_SECRET_KEY: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+
       - name: Build site
         working-directory: src/site
         run: |
