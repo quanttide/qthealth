@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:studio/blocs/record_form_cubit.dart';
+import 'package:studio/record/record_form_cubit.dart';
 import 'package:studio/sources/record_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

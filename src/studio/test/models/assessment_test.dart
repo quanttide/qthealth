@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:studio/blocs/assessment_state.dart';
+import 'package:studio/status/assessment_state.dart';
 import 'package:studio/data/assessments.dart';
 import 'package:studio/models/assessment.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'blocs/records_cubit.dart';
+import 'record/records_cubit.dart';
 import 'router.dart';
 import 'theme.dart';
 

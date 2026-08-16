@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:studio/blocs/records_cubit.dart';
-import 'package:studio/blocs/records_state.dart';
+import 'package:studio/record/records_cubit.dart';
+import 'package:studio/record/records_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {

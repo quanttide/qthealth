@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../blocs/assessment_cubit.dart';
-import '../blocs/assessment_state.dart';
+import 'assessment_cubit.dart';
+import 'assessment_state.dart';
 import '../data/assessments.dart';
 import '../models/assessment.dart';
 

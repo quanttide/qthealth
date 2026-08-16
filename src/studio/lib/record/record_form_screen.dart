@@ -11,8 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../blocs/record_form_cubit.dart';
-import '../blocs/record_form_state.dart';
+import 'record_form_cubit.dart';
+import 'record_form_state.dart';
 import '../constants.dart';
 import '../models/abc_record.dart';
 import '../services/safety.dart';

@@ -8,10 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../blocs/records_cubit.dart';
-import '../blocs/records_state.dart';
-import '../views/analytics_charts.dart';
-import '../views/record_card.dart';
+import '../record/records_cubit.dart';
+import '../record/records_state.dart';
+import 'analytics_charts.dart';
+import '../record/record_card.dart';
 
 class StatusScreen extends StatelessWidget {
   const StatusScreen({super.key});

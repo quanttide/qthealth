@@ -4,13 +4,13 @@ library;
 
 import 'package:go_router/go_router.dart';
 
-import 'screens/assessment_list_screen.dart';
-import 'screens/assessment_quiz_screen.dart';
-import 'screens/crisis_screen.dart';
-import 'screens/practice_screen.dart';
-import 'screens/record_form_screen.dart';
-import 'screens/status_screen.dart';
-import 'views/app_shell.dart';
+import 'status/assessment_list_screen.dart';
+import 'status/assessment_quiz_screen.dart';
+import 'practice/crisis_screen.dart';
+import 'practice/practice_screen.dart';
+import 'record/record_form_screen.dart';
+import 'status/status_screen.dart';
+import 'shell/app_shell.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/status',
