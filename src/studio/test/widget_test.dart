@@ -24,7 +24,7 @@ void main() {
     expect(find.text('PSS-4 压力感知'), findsNothing);
   });
 
-  testWidgets('今日快照：4 个核心维度全部展示，逐题点选即记录', (tester) async {
+  testWidgets('今日快照：逐题点选先暂存，答完一轮统一保存', (tester) async {
     // 高视口：避免 ListView 懒加载把「最近快照」挤出视口
     tester.view.physicalSize = const Size(800, 1400);
     tester.view.devicePixelRatio = 1.0;
@@ -43,22 +43,38 @@ void main() {
     expect(find.text('昨晚睡得好吗？'), findsOneWidget);
     expect(find.text('今天情绪偏向哪边？'), findsOneWidget);
 
-    // 逐题点选（每题用独立 Key 定位选项，避免同文案选项歧义）
+    // 答前 3 题：只暂存（内存），不写存储
     await _tapOption(tester, 'energy', '3');
-    expect(find.textContaining('已答 1 / 4 题'), findsOneWidget);
     await _tapOption(tester, 'stress', '2');
     await _tapOption(tester, 'sleep', '4');
+    expect(find.textContaining('已选 3 / 4 题'), findsOneWidget);
+    var prefs = await SharedPreferences.getInstance();
+    expect(prefs.getString(SnapshotStore.cacheKey), isNull);
+
+    // 第 4 题答完：一轮完成，统一保存一次（存储出现完整 4 条）
     await _tapOption(tester, 'mood', '🙂');
     expect(find.textContaining('已答 4 / 4 题'), findsOneWidget);
+    prefs = await SharedPreferences.getInstance();
+    final saved = jsonDecode(prefs.getString(SnapshotStore.cacheKey)!) as List;
+    expect(saved.length, 4);
+    expect(saved.map((e) => e['questionId']).toSet(),
+        {'energy', 'stress', 'sleep', 'mood'});
 
     // 全部出现在最近快照（卡内 1 处 + 历史 1 处）
     expect(find.text('最近快照'), findsOneWidget);
     expect(find.text('今天精力怎么样？'), findsNWidgets(2));
     expect(find.text('今天情绪偏向哪边？'), findsNWidgets(2));
 
-    // 修改答案不产生重复记录
+    // 修改答案：统一保存一次，不产生重复记录
     await _tapOption(tester, 'energy', '5');
     expect(find.textContaining('已答 4 / 4 题'), findsOneWidget);
+    prefs = await SharedPreferences.getInstance();
+    final afterEdit = jsonDecode(prefs.getString(SnapshotStore.cacheKey)!) as List;
+    expect(afterEdit.length, 4);
+    expect(
+      (afterEdit.firstWhere((e) => e['questionId'] == 'energy'))['value'],
+      5,
+    );
     expect(find.text('今天精力怎么样？'), findsNWidgets(2));
   });
 

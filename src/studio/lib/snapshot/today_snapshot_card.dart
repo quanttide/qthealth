@@ -1,5 +1,5 @@
 /// 今日快照卡：4 个核心维度（精力/压力/睡眠/情绪）各 1 题，
-/// 按钮点选即记录，10 秒完成。
+/// 点选暂存，答完一轮统一保存，10 秒完成。
 library;
 
 import 'package:flutter/material.dart';
@@ -18,7 +18,6 @@ class TodaySnapshotCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cubit = context.read<SnapshotCubit>();
-    final answered = state.todaySnapshots;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -36,7 +35,7 @@ class TodaySnapshotCard extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              '4 个核心维度 · 点选即记录 · 10 秒完成',
+              '4 个核心维度 · 答完一轮自动保存 · 10 秒完成',
               style: theme.textTheme.bodySmall
                   ?.copyWith(color: theme.colorScheme.outline),
             ),
@@ -55,20 +54,25 @@ class TodaySnapshotCard extends StatelessWidget {
                         q.labels[i],
                         style: const TextStyle(fontSize: 18),
                       ),
-                      selected: answered[q.id]?.value == q.values[i],
+                      selected: state.valueOf(q.id) == q.values[i],
                       onSelected: (_) => cubit.answer(q.id, q.values[i]),
                     ),
                 ],
               ),
             ],
-            if (answered.isNotEmpty) ...[
-              const SizedBox(height: 12),
+            const SizedBox(height: 12),
+            if (state.allAnswered)
               Text(
-                '✓ 今日已答 ${answered.length} / ${kSnapshotQuestions.length} 题，点击可修改',
+                '✓ 今日已答 ${state.answeredCount} / ${kSnapshotQuestions.length} 题，点击可修改',
                 style: theme.textTheme.bodySmall
                     ?.copyWith(color: theme.colorScheme.primary),
+              )
+            else if (state.draft.isNotEmpty)
+              Text(
+                '已选 ${state.answeredCount} / ${kSnapshotQuestions.length} 题，答完一轮自动保存',
+                style: theme.textTheme.bodySmall
+                    ?.copyWith(color: theme.colorScheme.outline),
               ),
-            ],
           ],
         ),
       ),
