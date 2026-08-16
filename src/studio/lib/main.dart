@@ -19,7 +19,7 @@ class QtcloudHealthApp extends StatelessWidget {
         BlocProvider(create: (_) => RecordsCubit()..load()),
       ],
       child: MaterialApp.router(
-        title: '量潮健康云',
+        title: '量潮健康',
         theme: buildTheme(),
         routerConfig: appRouter,
         debugShowCheckedModeBanner: false,

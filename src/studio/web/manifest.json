@@ -1,11 +1,11 @@
 {
-    "name": "studio",
-    "short_name": "studio",
+    "name": "量潮健康",
+    "short_name": "量潮健康",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "量潮健康——个人健康管理工作台",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
