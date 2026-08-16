@@ -41,10 +41,11 @@ jobs:
             -backend-config="bucket=${{ secrets.TF_STATE_BUCKET || 'quanttide-terraform-state' }}" \
             -backend-config="key=qthealth/site.tfstate" \
             -backend-config="region=cn-hangzhou"
-          terraform apply -auto-approve \
+          terraform apply -input=false -auto-approve \
             -var region=cn-hangzhou \
             -var environment=prod \
-            -var oss_bucket_name=qthealth-site
+            -var oss_bucket_name=qthealth-site \
+            -var image=placeholder
         env:
           ALICLOUD_ACCESS_KEY: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
           ALICLOUD_SECRET_KEY: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
