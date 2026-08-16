@@ -88,6 +88,12 @@ jobs:
           flutter build web --release \
             --dart-define=PROVIDER_BASE_URL=${{ env.PROVIDER_BASE_URL }} \
             --dart-define=AUTH_BASE_URL=${{ env.AUTH_BASE_URL }}
+          # 缓存破环：main.dart.js 是固定文件名（不带内容哈希），若曾以长缓存
+          # 发布，浏览器会一直用本地旧 JS（线上看起来"没有变化"）。给 bootstrap
+          # 中所有 main.dart.js 引用附加构建哈希查询串（缓存键变化 → 强制重新
+          # 拉取），配合入口文件 no-cache，任何缓存状态的浏览器都能拿到新版本。
+          VERSION=$(md5sum build/web/main.dart.js | cut -c1-10)
+          sed -i "s|\"main.dart.js\"|\"main.dart.js?v=${VERSION}\"|g" build/web/flutter_bootstrap.js
 
       - name: Setup ossutil
         uses: manyuanrong/setup-ossutil@v3.0

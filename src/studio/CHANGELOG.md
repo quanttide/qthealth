@@ -14,6 +14,14 @@
 
 ---
 
+## [0.1.1-alpha.4] - 2026-08-17
+
+### Fixed
+
+- 发布后浏览器仍显示旧版本（"线上没有变化"）：alpha.2 部署时 `main.dart.js` 被长缓存（max-age=1 年），已缓存的浏览器一直运行旧代码。修复：部署流程给 `main.dart.js` 补上 no-cache，并在 `flutter_bootstrap.js` 引用中附加构建哈希查询串（`main.dart.js?v=<hash>`）强制缓存破环——任何缓存状态的浏览器在下次刷新时都会拉取新版本
+
+---
+
 ## [0.1.1-alpha.3] - 2026-08-17
 
 ### Changed
