@@ -1,30 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'app_state.dart';
-import 'ui/home_page.dart';
+import 'blocs/records_cubit.dart';
+import 'router.dart';
+import 'theme.dart';
 
 void main() {
-  runApp(HealthApp(state: AppState()));
+  runApp(const QtcloudHealthApp());
 }
 
-/// 量潮健康客户端入口。
-///
-/// 参考 qtcloud-secret studio 模式：页面由 AppState 状态驱动。
-class HealthApp extends StatelessWidget {
-  const HealthApp({super.key, required this.state});
-
-  final AppState state;
+class QtcloudHealthApp extends StatelessWidget {
+  const QtcloudHealthApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: '量潮健康',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF10B981)),
-        useMaterial3: true,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => RecordsCubit()..load()),
+      ],
+      child: MaterialApp.router(
+        title: '量潮健康云',
+        theme: buildTheme(),
+        routerConfig: appRouter,
+        debugShowCheckedModeBanner: false,
       ),
-      home: HomePage(state: state),
     );
   }
 }
