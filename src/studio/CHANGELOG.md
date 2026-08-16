@@ -10,14 +10,13 @@
 
 ## [Unreleased]
 
-### Changed
+### Added
 
-- 量表列表页移除，具体量表（PSS-4 / Mini-IPIP / CBI）直接列在「记录」页，点击即进入作答（无中间列表页）
-- 量表作答：点击答案自动跳转到下一题，最后一题自动出结果；底部仅保留「上一题」（可返回修改）；结果页新增「重新作答」，返回改为回「记录」页
+- 单题快照（替代完整量表）：每天只问 1 题（精力 / 压力 / 睡眠 / 情绪按日期轮换），按钮点选即记录（数字 1-5 或表情），10 秒完成；本地缓存 `daily_snapshots_v1`，记录页展示今日快照 + 最近快照列表，当天可修改
 
 ### Removed
 
-- 量表列表页（/assessments）下线，代码保留（lib/status/assessment_list_screen.dart，含历史结果展示）
+- 问卷式量表全部砍掉（PSS-4 / Mini-IPIP / CBI 作答与列表页下线），代码保留（lib/status/assessment_quiz_screen.dart、assessment_list_screen.dart 等），未来可恢复
 
 ---
 

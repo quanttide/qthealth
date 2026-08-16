@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:go_router/go_router.dart';
 
 import 'record/records_cubit.dart';
 import 'router.dart';
@@ -13,7 +14,10 @@ void main() {
 }
 
 class QtcloudHealthApp extends StatelessWidget {
-  const QtcloudHealthApp({super.key});
+  const QtcloudHealthApp({super.key, this.router});
+
+  /// 测试注入用；为空时使用默认路由。
+  final GoRouter? router;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +28,7 @@ class QtcloudHealthApp extends StatelessWidget {
       child: MaterialApp.router(
         title: '量潮健康',
         theme: buildTheme(),
-        routerConfig: appRouter,
+        routerConfig: router ?? appRouter,
         debugShowCheckedModeBanner: false,
       ),
     );

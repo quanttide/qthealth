@@ -1,3 +1,8 @@
+/// ⚠️ 已下线（2026-08-17）：问卷式量表已砍掉，换成「单题快照」（每天一问，
+/// 见 lib/snapshot/ 与 lib/data/snapshots.dart）。本文件完整保留以便未来
+/// 重新启用（届时在 lib/router.dart 注册 /assessments/:assessmentId，
+/// 并在记录页恢复入口即可）。
+///
 /// 心理测试答题页：逐题作答（点击答案自动跳转下一题）+ 结果视图。
 library;
 
