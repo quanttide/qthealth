@@ -133,3 +133,65 @@ resource "alicloud_alidns_record" "studio" {
   value       = alicloud_cdn_domain_new.studio.cname
   ttl         = 600
 }
+
+# ── studio.health.quanttide.com（Flutter Web 客户端） ──────────────────
+
+resource "alicloud_cdn_domain_new" "studio_web" {
+  domain_name = "studio.health.quanttide.com"
+  cdn_type    = "web"
+
+  # 源站：OSS 静态网站桶（studio 专用桶 qthealth-studio——上传目标一致）
+  sources {
+    content  = "qthealth-studio.oss-cn-hangzhou.aliyuncs.com"
+    type     = "oss"
+    port     = 80
+    priority = 20
+  }
+}
+
+# 私有回源开关（同 site）
+resource "alicloud_cdn_domain_config" "studio_web_private_back" {
+  domain_name   = alicloud_cdn_domain_new.studio_web.domain_name
+  function_name = "l2_oss_key"
+  function_args {
+    arg_name  = "private_oss_auth"
+    arg_value = "on"
+  }
+}
+
+# 根路径改写为 /index.html（同 site）
+resource "alicloud_cdn_domain_config" "studio_web_root_rewrite" {
+  domain_name   = alicloud_cdn_domain_new.studio_web.domain_name
+  function_name = "back_to_origin_url_rewrite"
+  function_args {
+    arg_name  = "source_url"
+    arg_value = "^/$"
+  }
+  function_args {
+    arg_name  = "target_url"
+    arg_value = "/index.html"
+  }
+  function_args {
+    arg_name  = "flag"
+    arg_value = "break"
+  }
+}
+
+# 强制 HTTPS
+resource "alicloud_cdn_domain_config" "studio_web_https_force" {
+  domain_name   = alicloud_cdn_domain_new.studio_web.domain_name
+  function_name = "https_force"
+  function_args {
+    arg_name  = "enable"
+    arg_value = "on"
+  }
+}
+
+# DNS：studio CNAME 接入
+resource "alicloud_alidns_record" "studio_web" {
+  domain_name = "quanttide.com"
+  rr          = "studio.health"
+  type        = "CNAME"
+  value       = alicloud_cdn_domain_new.studio_web.cname
+  ttl         = 600
+}

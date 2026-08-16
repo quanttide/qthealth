@@ -37,7 +37,7 @@ concurrency:
 env:
   OSS_BUCKET: qthealth-studio
   OSS_ENDPOINT: oss-cn-hangzhou.aliyuncs.com
-  CDN_DOMAIN: health.quanttide.com
+  CDN_DOMAIN: studio.health.quanttide.com
   PROVIDER_BASE_URL: ${{ vars.PROVIDER_BASE_URL || 'https://qtcloudret-prod-lsqtuthybh.cn-hangzhou.fcapp.run' }}
   AUTH_BASE_URL: ${{ vars.AUTH_BASE_URL || 'https://qtclouduth-prod-gnuguyxinh.cn-hangzhou.fcapp.run' }}
 
@@ -55,6 +55,30 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.44.8'
+
+      - name: Setup terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Apply infrastructure (Terraform)
+        working-directory: manifests/terraform
+        run: |
+          terraform init \
+            -backend-config="bucket=${{ secrets.TF_STATE_BUCKET || 'quanttide-terraform-state' }}" \
+            -backend-config="key=qthealth/studio.tfstate" \
+            -backend-config="region=cn-hangzhou"
+          terraform apply -input=false -auto-approve \
+            -var region=cn-hangzhou \
+            -var environment=prod \
+            -var oss_bucket_name=qthealth-studio \
+            -var image=placeholder \
+            -target=alicloud_cdn_domain_new.studio_web \
+            -target=alicloud_cdn_domain_config.studio_web_private_back \
+            -target=alicloud_cdn_domain_config.studio_web_root_rewrite \
+            -target=alicloud_cdn_domain_config.studio_web_https_force \
+            -target=alicloud_alidns_record.studio_web
+        env:
+          ALICLOUD_ACCESS_KEY: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+          ALICLOUD_SECRET_KEY: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
 
       - name: Build Web
         working-directory: src/studio
