@@ -31,6 +31,9 @@ jobs:
         with:
           node-version: 22
 
+      - name: Setup terraform
+        uses: hashicorp/setup-terraform@v3
+
       - name: Apply infrastructure (Terraform)
         working-directory: manifests/terraform
         run: |
