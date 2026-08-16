@@ -1,0 +1,60 @@
+# 四端验证流水线：push/PR 触发，验证 cli/provider/studio/site 全部构建与测试通过。
+name: Verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  cli:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/cli
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo build
+      - run: cargo test
+
+  provider:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/provider
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+      - run: go build ./...
+      - run: go vet ./...
+      - run: go test ./...
+
+  studio:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
+
+  site:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/site
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm run build

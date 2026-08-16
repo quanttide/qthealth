@@ -1,0 +1,53 @@
+# 部署 site：推送 site/* tag 时，构建 React Web 产物上传到 OSS 静态网站桶，刷新 CDN。
+#
+# 架构：site/* tag → Actions（npm build + ossutil cp）→ OSS 桶（静态网站模式）
+#   → 阿里云 CDN（health.cloud.quanttide.com，泛域名证书 *.quanttide.com）
+#
+# 所需 GitHub secrets（org 级）：
+#   - ALIYUN_ACCESS_KEY_ID / ALIYUN_ACCESS_KEY_SECRET：RAM 用户 AccessKey（OSS 上传 + CDN 刷新）
+
+name: Deploy Site
+
+on:
+  push:
+    tags:
+      - 'site/**'
+
+concurrency:
+  group: deploy-site
+  cancel-in-progress: false
+
+env:
+  OSS_BUCKET: qthealth-site
+  OSS_ENDPOINT: oss-cn-hangzhou.aliyuncs.com
+  CDN_DOMAIN: health.cloud.quanttide.com
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build site
+        working-directory: src/site
+        run: |
+          npm ci
+          npm run build
+
+      - name: Upload to OSS
+        uses: manyuanrong/setup-ossutil@v1
+        with:
+          endpoint: ${{ env.OSS_ENDPOINT }}
+          access-key-id: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+          access-key-secret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+      - run: ossutil cp -r -f src/site/dist/ oss://${{ env.OSS_BUCKET }}/
+
+      - name: Refresh CDN
+        run: |
+          curl -s -X POST "https://cdn.aliyuncs.com/?Action=RefreshObjectCaches&ObjectType=Directory" \
+            -H "x-acs-access-key-id: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}" \
+            -H "x-acs-access-key-secret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}" \
+            -d "ObjectPath=https://${{ env.CDN_DOMAIN }}/" || true
