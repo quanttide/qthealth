@@ -1,7 +1,7 @@
 /// 应用外壳：常驻侧边导航（NavigationRail）+ 内容区。
 ///
-/// 侧边导航栏常住（不随页面收起的抽屉），提供 首页 / 写日记 / 心理测试
-/// 三个主入口；底部为数据说明入口（仅本设备缓存提示）。
+/// 三职能导航对应身心灵闭环三环：
+/// 记录（观测）/ 状态（反馈）/ 练习（干预）。
 library;
 
 import 'package:flutter/material.dart';
@@ -19,18 +19,23 @@ class AppShell extends StatelessWidget {
     String label,
     String path,
   })> _destinations = [
-    (icon: Icons.home_outlined, selectedIcon: Icons.home, label: '首页', path: '/'),
     (
       icon: Icons.edit_note,
       selectedIcon: Icons.edit_note,
-      label: '写日记',
+      label: '记录',
       path: '/record',
     ),
     (
-      icon: Icons.psychology_outlined,
-      selectedIcon: Icons.psychology,
-      label: '心理测试',
-      path: '/assessments',
+      icon: Icons.insights_outlined,
+      selectedIcon: Icons.insights,
+      label: '状态',
+      path: '/status',
+    ),
+    (
+      icon: Icons.self_improvement_outlined,
+      selectedIcon: Icons.self_improvement,
+      label: '练习',
+      path: '/practice',
     ),
   ];
 

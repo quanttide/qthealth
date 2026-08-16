@@ -13,15 +13,20 @@ import '../blocs/records_state.dart';
 import '../views/analytics_charts.dart';
 import '../views/record_card.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class StatusScreen extends StatelessWidget {
+  const StatusScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('量潮健康云'),
+        title: const Text('状态'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.psychology_outlined),
+            tooltip: '心理测试',
+            onPressed: () => context.push('/assessments'),
+          ),
           IconButton(
             icon: const Icon(Icons.delete_sweep_outlined),
             tooltip: '清空本地数据',
