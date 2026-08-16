@@ -22,7 +22,7 @@ class AppShell extends StatelessWidget {
     (
       icon: Icons.edit_note,
       selectedIcon: Icons.edit_note,
-      label: '记录',
+      label: '日志',
       path: '/record',
     ),
     (

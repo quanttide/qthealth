@@ -9,8 +9,8 @@ void main() {
     await tester.pumpWidget(const QtcloudHealthApp());
     await tester.pumpAndSettle();
 
-    // 常驻侧边导航：记录 / 状态 / 练习 直接可见（无需打开抽屉）
-    expect(find.text('记录'), findsOneWidget);
+    // 常驻侧边导航：日志 / 状态 / 练习 直接可见（无需打开抽屉）
+    expect(find.text('日志'), findsOneWidget);
     expect(find.text('状态'), findsWidgets); // 侧边导航 + 状态页标题
     expect(find.text('练习'), findsOneWidget);
 
