@@ -45,7 +45,13 @@ jobs:
             -var region=cn-hangzhou \
             -var environment=prod \
             -var oss_bucket_name=qthealth-site \
-            -var image=placeholder
+            -var image=placeholder \
+            -target=alicloud_oss_bucket.studio \
+            -target=alicloud_cdn_domain_new.studio \
+            -target=alicloud_cdn_domain_config.studio_private_back \
+            -target=alicloud_cdn_domain_config.studio_root_rewrite \
+            -target=alicloud_cdn_domain_config.studio_https_force \
+            -target=alicloud_alidns_record.studio
         env:
           ALICLOUD_ACCESS_KEY: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
           ALICLOUD_SECRET_KEY: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
