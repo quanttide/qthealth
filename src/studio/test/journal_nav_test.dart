@@ -5,17 +5,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studio/main.dart';
 
 void main() {
-  testWidgets('日志页：保存后「返回首页」回到状态页（无死返回箭头）', (tester) async {
+  testWidgets('记录→情绪日记：保存后「返回首页」回到状态页', (tester) async {
     SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(const QtcloudHealthApp());
     await tester.pumpAndSettle();
 
-    // 从侧边导航进入日志页（go 直达，无路由栈）
-    await tester.tap(find.text('日志'));
+    // 侧边导航「记录」→ 记录类型入口 → 情绪日记
+    await tester.tap(find.text('记录'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('情绪日记'));
     await tester.pumpAndSettle();
     expect(find.text('情绪日记（1/2）'), findsOneWidget);
-    // 标签页不显示返回箭头（侧边栏即导航）
-    expect(find.byType(BackButton), findsNothing);
+    // 表单从记录页 push 进入，返回箭头可回记录页
+    expect(find.byType(BackButton), findsOneWidget);
 
     // 写一段日记 → 自动梳理 → 确认保存
     await tester.enterText(find.byType(TextField).first, '今天开会方案被否决，我很沮丧');
@@ -31,6 +33,6 @@ void main() {
     await tester.tap(find.text('返回首页'));
     await tester.pumpAndSettle();
     expect(find.text('状态'), findsWidgets);
-    expect(find.byTooltip('心理测试'), findsOneWidget);
+    expect(find.text('记录'), findsOneWidget);
   });
 }

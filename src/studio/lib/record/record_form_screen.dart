@@ -44,9 +44,8 @@ class _FormScaffold extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: Text('情绪日记（${state.step + 1}/2）'),
-            // 日志是常驻侧边导航的标签页（go 直达、无路由栈），
-            // 不显示返回箭头（侧边栏即导航）；保存完成页另设返回按钮。
-            automaticallyImplyLeading: false,
+            // 表单从「记录」页 push 进入，返回箭头 pop 回记录页
+            leading: BackButton(onPressed: () => context.pop()),
           ),
           body: SafeArea(
             child: Column(

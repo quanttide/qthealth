@@ -23,11 +23,6 @@ class StatusScreen extends StatelessWidget {
         title: const Text('状态'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.psychology_outlined),
-            tooltip: '心理测试',
-            onPressed: () => context.push('/assessments'),
-          ),
-          IconButton(
             icon: const Icon(Icons.delete_sweep_outlined),
             tooltip: '清空本地数据',
             onPressed: () => _confirmClear(context),
@@ -47,8 +42,8 @@ class StatusScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
-        // 与侧边导航一致的标签页跳转（go），避免 push 造成路由栈不一致
-        onPressed: () => context.go('/record'),
+        // 写日记直达情绪日记表单（量表从「记录」页进入）
+        onPressed: () => context.push('/record/journal'),
         icon: const Icon(Icons.edit_note),
         label: const Text('写日记'),
       ),

@@ -62,7 +62,7 @@ class PracticeScreen extends StatelessWidget {
     );
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('已记录 $name $minutes 分钟（行为日志）')),
+      SnackBar(content: Text('已记录 $name $minutes 分钟（行为记录）')),
     );
   }
 

@@ -1,5 +1,6 @@
 /// 路由表（go_router）：
 /// 常驻侧边导航外壳（记录 / 状态 / 练习）+ 全屏页（量表作答 / 危机干预）。
+/// 量表作为记录的一种类型，从「记录」页（/record 入口）进入，不单独设导航入口。
 library;
 
 import 'package:go_router/go_router.dart';
@@ -9,6 +10,7 @@ import 'status/assessment_quiz_screen.dart';
 import 'practice/crisis_screen.dart';
 import 'practice/practice_screen.dart';
 import 'record/record_form_screen.dart';
+import 'record/record_screen.dart';
 import 'status/status_screen.dart';
 import 'shell/app_shell.dart';
 
@@ -20,6 +22,10 @@ final GoRouter appRouter = GoRouter(
       routes: [
         GoRoute(
           path: '/record',
+          builder: (context, state) => const RecordScreen(),
+        ),
+        GoRoute(
+          path: '/record/journal',
           builder: (context, state) => const RecordFormScreen(),
         ),
         GoRoute(

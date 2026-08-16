@@ -9,15 +9,31 @@ void main() {
     await tester.pumpWidget(const QtcloudHealthApp());
     await tester.pumpAndSettle();
 
-    // 常驻侧边导航：日志 / 状态 / 练习 直接可见（无需打开抽屉）
-    expect(find.text('日志'), findsOneWidget);
+    // 常驻侧边导航：记录 / 状态 / 练习（量表不单独设入口）
+    expect(find.text('记录'), findsOneWidget);
     expect(find.text('状态'), findsWidgets); // 侧边导航 + 状态页标题
     expect(find.text('练习'), findsOneWidget);
+    expect(find.text('量表'), findsNothing);
 
-    // 状态页 AppBar 提供心理测试入口
-    expect(find.byTooltip('心理测试'), findsOneWidget);
+    // 状态页不再有独立心理测试图标（量表从「记录」页进入）
+    expect(find.byTooltip('心理测试'), findsNothing);
+  });
+
+  testWidgets('「记录」页提供记录类型入口：情绪日记 + 量表', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    await tester.pumpWidget(const QtcloudHealthApp());
+    await tester.pumpAndSettle();
+
+    // 进入记录页（记录类型入口）
+    await tester.tap(find.text('记录'));
+    await tester.pumpAndSettle();
+    expect(find.text('情绪日记'), findsOneWidget);
+    expect(find.text('量表'), findsOneWidget);
+
+    // 量表作为记录类型 → 量表列表
+    await tester.tap(find.text('量表'));
+    await tester.pumpAndSettle();
+    expect(find.text('PHQ-9 抑郁筛查'), findsOneWidget);
+    expect(find.text('GAD-7 焦虑筛查'), findsOneWidget);
   });
 }
-
-// 追加用例：日志页保存完成后的导航（回归：此前「返回首页」go('/') 无路由）
-// ignore_for_file: prefer_const_constructors

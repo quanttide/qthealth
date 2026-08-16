@@ -1,7 +1,7 @@
 /// 应用外壳：常驻侧边导航（NavigationRail）+ 内容区。
 ///
-/// 三职能导航对应身心灵闭环三环：
-/// 记录（观测）/ 状态（反馈）/ 练习（干预）。
+/// 导航：记录（观测）/ 状态（反馈）/ 练习（干预）。
+/// 量表作为记录的一种类型，从「记录」页进入，不单独设导航入口。
 library;
 
 import 'package:flutter/material.dart';
@@ -22,7 +22,7 @@ class AppShell extends StatelessWidget {
     (
       icon: Icons.edit_note,
       selectedIcon: Icons.edit_note,
-      label: '日志',
+      label: '记录',
       path: '/record',
     ),
     (

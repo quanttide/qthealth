@@ -1,4 +1,4 @@
-/// 心理测试列表页：内置量表 + 历史结果。
+/// 量表列表页（记录的一种类型：测评记录）+ 历史结果。
 library;
 
 import 'package:flutter/material.dart';
@@ -31,7 +31,7 @@ class _ListBody extends StatelessWidget {
       builder: (context, state) {
         final history = state is AssessmentListState ? state.history : const <AssessmentResult>[];
         return Scaffold(
-          appBar: AppBar(title: const Text('心理测试')),
+          appBar: AppBar(title: const Text('量表')),
           body: ListView(
             padding: const EdgeInsets.only(bottom: 32),
             children: [
